@@ -22,13 +22,19 @@ load_dotenv()
 
 app = FastAPI()
 
+# global
+query_engine = None 
+
 class QueryRequest(BaseModel):
     question: str
-    query: str
 
 @app.on_event("startup")
 def init():
+    global query_engine
     print("here? - 1")
+
+    # timer start
+    start = time.perf_counter()
 
     persist_dir = "index_store"
     if os.path.exists(persist_dir):
@@ -37,9 +43,6 @@ def init():
         index = load_index_from_storage(storage_context)
     else:
         print("creating new index...")
-
-        # timer start
-        start = time.perf_counter()
 
         # チャンク設定（文単位で分割しつつ、サイズを制御）
         text_splitter = SentenceSplitter(
@@ -51,31 +54,27 @@ def init():
         reader = SimpleDirectoryReader(input_dir="stories")
         documents = reader.load_data()
 
-        print("here? - 2")
-
         # 📚 インデックス作成
         index = VectorStoreIndex.from_documents(documents)
-
-        print("here? - 3")
 
         # save index to local-storage
         index.storage_context.persist(persist_dir=persist_dir)
 
-        # 🔍 クエリエンジン作成
-        query_engine = index.as_query_engine()
+    # 🔍 クエリエンジン作成
+    query_engine = index.as_query_engine()
 
-        print("here? - 4")
+    print("here? - 4")
 
-        # 💬 テストクエリ
-        response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
+    # 💬 テストクエリ
+    response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
 
-        print("here? - 5")
+    print("here? - 5")
 
-        print("\n=== AI RESPONSE ===\n")
-        print(response)
+    print("\n=== AI RESPONSE ===\n")
+    print(response)
 
-        end = time.perf_counter()
-        print(f"⏱️ 実行時間: {end - start:.4f} 秒")
+    end = time.perf_counter()
+    print(f"⏱️ 実行時間: {end - start:.4f} 秒")
 
 @app.get("/test")
 def test():
@@ -83,7 +82,12 @@ def test():
 
 @app.post("/test")
 def postTest(req: QueryRequest):
-     return {"test": req.query}
+    global query_engine
+
+    print(req)
+
+    response = query_engine.query(req.question)
+    return {"answer": str(response)}
     
 
 @app.post("/query")
