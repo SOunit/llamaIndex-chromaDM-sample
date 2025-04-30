@@ -1,0 +1,10 @@
+http://127.0.0.1:8000/test
+
+###
+
+POST http://127.0.0.1:8000/test
+Content-Type: application/json
+
+{
+    "query": "作者は誰ですか？"
+}

@@ -22,6 +22,7 @@ app = FastAPI()
 
 class QueryRequest(BaseModel):
     question: str
+    query: str
 
 @app.on_event("startup")
 def init():
@@ -65,7 +66,12 @@ def init():
 
 @app.get("/test")
 def test():
-    return {"test": "test"}
+     return {"test": "test - get"}
+
+@app.post("/test")
+def postTest(req: QueryRequest):
+     return {"test": req.query}
+    
 
 @app.post("/query")
 async def query_codebase(req: QueryRequest):
