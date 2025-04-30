@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 
+import os
 import time
+
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core import VectorStoreIndex, Settings, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -55,6 +57,9 @@ def init():
         index = VectorStoreIndex.from_documents(documents)
 
         print("here? - 3")
+
+        # save index to local-storage
+        index.storage_context.persist(persist_dir=persist_dir)
 
         # 🔍 クエリエンジン作成
         query_engine = index.as_query_engine()
