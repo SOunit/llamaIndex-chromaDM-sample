@@ -46,7 +46,7 @@ index = VectorStoreIndex.from_documents(documents)
 query_engine = index.as_query_engine()
 
 # 💬 テストクエリ
-response = query_engine.query("repomix-output-SOunit-aung-reviewer.xmlファイルを読み込みましたか？このファイルは、あるアプリのrepomixファイルです。プロジェクト全体を読み込み、文脈を踏まえた効果的なPRレビューを行うためのものです。repomix-output-SOunit-aung-reviewer.xmlを読んで、プロジェクトの全体像をコンテキストとして読み込むことは成功しましたか？日本語で返答をお願いします。")
+response = query_engine.query("repomix-output--web.txtを読み込みましたね？これはあるプロジェクトのRepomixファイルです。つまり、AIにコンテキストを提供するためのデータファイルです。このプロジェクトは品質が低いのですが、このプロジェクトの特にひどい部分を１０個ほど指摘し、それに対する対応策を示してください。あなたはシニアエンジニアで、このプロジェクトを健全化する義務があります。いいですね。１０個の問題点の指摘と、具体的な改善案を示してください。")
 
 print("\n=== AI RESPONSE ===\n")
 print(response)

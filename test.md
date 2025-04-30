@@ -27,3 +27,9 @@ ChatGPT
 
 ChatGPT,レポミックス？＞コンテキストを生成？
 メタプロンプト
+
+# repomix
+
+```
+npx repomix . --output repomix-output--web.txt --compress
+```
