@@ -28,41 +28,49 @@ class QueryRequest(BaseModel):
 def init():
     print("here? - 1")
 
-    # timer start
-    start = time.perf_counter()
+    persist_dir = "index_store"
+    if os.path.exists(persist_dir):
+        print("loading existing index...")
+        storage_context = StorageContext.from_defaults(persist_dir=persist_dir)
+        index = load_index_from_storage(storage_context)
+    else:
+        print("creating new index...")
 
-    # チャンク設定（文単位で分割しつつ、サイズを制御）
-    text_splitter = SentenceSplitter(
-        chunk_size=3000,
-        chunk_overlap=200,
-    )
+        # timer start
+        start = time.perf_counter()
 
-    # load using repomix
-    reader = SimpleDirectoryReader(input_dir="stories")
-    documents = reader.load_data()
+        # チャンク設定（文単位で分割しつつ、サイズを制御）
+        text_splitter = SentenceSplitter(
+            chunk_size=3000,
+            chunk_overlap=200,
+        )
 
-    print("here? - 2")
+        # load using repomix
+        reader = SimpleDirectoryReader(input_dir="stories")
+        documents = reader.load_data()
 
-    # 📚 インデックス作成
-    index = VectorStoreIndex.from_documents(documents)
+        print("here? - 2")
 
-    print("here? - 3")
+        # 📚 インデックス作成
+        index = VectorStoreIndex.from_documents(documents)
 
-    # 🔍 クエリエンジン作成
-    query_engine = index.as_query_engine()
+        print("here? - 3")
 
-    print("here? - 4")
+        # 🔍 クエリエンジン作成
+        query_engine = index.as_query_engine()
 
-    # 💬 テストクエリ
-    response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
+        print("here? - 4")
 
-    print("here? - 5")
+        # 💬 テストクエリ
+        response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
 
-    print("\n=== AI RESPONSE ===\n")
-    print(response)
+        print("here? - 5")
 
-    end = time.perf_counter()
-    print(f"⏱️ 実行時間: {end - start:.4f} 秒")
+        print("\n=== AI RESPONSE ===\n")
+        print(response)
+
+        end = time.perf_counter()
+        print(f"⏱️ 実行時間: {end - start:.4f} 秒")
 
 @app.get("/test")
 def test():
