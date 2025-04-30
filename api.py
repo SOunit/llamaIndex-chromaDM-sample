@@ -11,7 +11,7 @@ from llama_index.core.text_splitter import SentenceSplitter
 from llama_index.llms.ollama import Ollama
 
 import chromadb
-from llama_index.vector_stores.chroma import ChromaVectorStore
+# from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.storage.storage_context import StorageContext
 
 from utils.gitignore_directory_reader import GitIgnoreDirectoryReader
@@ -23,16 +23,18 @@ app = FastAPI()
 class QueryRequest(BaseModel):
     question: str
 
+
 @app.post("/query")
 async def query_codebase(req: QueryRequest):
-    chroma_client = chromadb.PersistentClient(path="./chroma_db")
-    vector_store = ChromaVectorStore(chroma_collection=chroma_client.get_or_create_collection("project_chunks"))
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
-    index = load_index_from_storage(storage_context)
+    # chroma_client = chromadb.PersistentClient(path="./chroma_db")
+    # vector_store = ChromaVectorStore(chroma_collection=chroma_client.get_or_create_collection("project_chunks"))
+    # storage_context = StorageContext.from_defaults(vector_store=vector_store)
+    # index = load_index_from_storage(storage_context)
 
-    query_engine = index.as_query_engine()
-    response = query_engine.query(req.question)
-    return {"answer": str(response)}
+    # query_engine = index.as_query_engine()
+    # response = query_engine.query(req.question)
+    # return {"answer": str(response)}
+    return {"answer": str("test")}
 
 print("here? - 1")
 
