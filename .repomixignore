@@ -1,0 +1,7 @@
+# .repomixignore
+**/bin/**
+**/obj/**
+**/.vs/**
+**/node_modules/**
+**/*.cshtml
+**/*.json
