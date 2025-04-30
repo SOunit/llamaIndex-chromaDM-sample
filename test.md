@@ -43,3 +43,9 @@ brew install ollama
 ```
 ollama run mistral
 ```
+
+# start as FastAPI app
+
+```
+uvicorn api:app --reload --port 8000
+```

@@ -1,15 +1,38 @@
+from fastapi import FastAPI, Request
+from pydantic import BaseModel
+
 import time
 from llama_index.core import SimpleDirectoryReader
-from llama_index.core import VectorStoreIndex, Settings
+from llama_index.core import VectorStoreIndex, Settings, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 from llama_index.core.text_splitter import SentenceSplitter
 
 from llama_index.llms.ollama import Ollama
 
+import chromadb
+from llama_index.vector_stores.chroma import ChromaVectorStore
+from llama_index.core.storage.storage_context import StorageContext
+
 from utils.gitignore_directory_reader import GitIgnoreDirectoryReader
 from dotenv import load_dotenv
 load_dotenv()
+
+app = FastAPI()
+
+class QueryRequest(BaseModel):
+    question: str
+
+@app.post("/query")
+async def query_codebase(req: QueryRequest):
+    chroma_client = chromadb.PersistentClient(path="./chroma_db")
+    vector_store = ChromaVectorStore(chroma_collection=chroma_client.get_or_create_collection("project_chunks"))
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+    index = load_index_from_storage(storage_context)
+
+    query_engine = index.as_query_engine()
+    response = query_engine.query(req.question)
+    return {"answer": str(response)}
 
 print("here? - 1")
 
