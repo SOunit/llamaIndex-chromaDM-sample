@@ -33,3 +33,13 @@ ChatGPT,レポミックス？＞コンテキストを生成？
 ```
 npx repomix . --output repomix-output--web.txt --compress
 ```
+
+# install local vector db
+
+```
+brew install ollama
+```
+
+```
+ollama run mistral
+```
