@@ -54,7 +54,7 @@ query_engine = index.as_query_engine()
 print("here? - 4")
 
 # 💬 テストクエリ
-response = query_engine.query("織田信長の文章を読みましたね？要約してください。")
+response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
 
 print("here? - 5")
 
