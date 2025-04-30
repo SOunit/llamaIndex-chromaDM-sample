@@ -21,7 +21,7 @@ def loadByMyself():
     # 📁 プロジェクト読み込み（.gitignore＆拡張子フィルタ付き）
     reader = GitIgnoreDirectoryReader(
         # input_dir="sample",  # ← 必要に応じて変更
-        input_dir="sample",  # ← 必要に応じて変更
+        input_dir="stories",  # ← 必要に応じて変更
         recursive=True
     )
     documents = reader.load_data()
@@ -46,7 +46,7 @@ index = VectorStoreIndex.from_documents(documents)
 query_engine = index.as_query_engine()
 
 # 💬 テストクエリ
-response = query_engine.query("repomix-output--web.txtを読み込みましたね？これはあるプロジェクトのRepomixファイルです。つまり、AIにコンテキストを提供するためのデータファイルです。このプロジェクトは品質が低いのですが、このプロジェクトの特にひどい部分を１０個ほど指摘し、それに対する対応策を示してください。あなたはシニアエンジニアで、このプロジェクトを健全化する義務があります。いいですね。１０個の問題点の指摘と、具体的な改善案を示してください。")
+response = query_engine.query("織田信長の文章を読みましたね？要約してください。")
 
 print("\n=== AI RESPONSE ===\n")
 print(response)
