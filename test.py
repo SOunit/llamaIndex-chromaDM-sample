@@ -1,4 +1,5 @@
 import time
+from llama_index.core import SimpleDirectoryReader
 from llama_index.core import VectorStoreIndex, Settings
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
@@ -10,6 +11,21 @@ from utils.gitignore_directory_reader import GitIgnoreDirectoryReader
 from dotenv import load_dotenv
 load_dotenv()
 
+def loadByMyself():
+    # OpenAI設定（EmbeddingとLLM）
+    Settings.embed_model = OpenAIEmbedding()
+    Settings.llm = OpenAI(model="gpt-4o") # this is slow...
+    # Settings.llm = Ollama(model="mistral")
+    Settings.text_splitter = text_splitter
+
+    # 📁 プロジェクト読み込み（.gitignore＆拡張子フィルタ付き）
+    reader = GitIgnoreDirectoryReader(
+        # input_dir="sample",  # ← 必要に応じて変更
+        input_dir="sample",  # ← 必要に応じて変更
+        recursive=True
+    )
+    documents = reader.load_data()
+
 # timer start
 start = time.perf_counter()
 
@@ -19,18 +35,8 @@ text_splitter = SentenceSplitter(
     chunk_overlap=200,
 )
 
-# OpenAI設定（EmbeddingとLLM）
-Settings.embed_model = OpenAIEmbedding()
-Settings.llm = OpenAI(model="gpt-4o") # this is slow...
-# Settings.llm = Ollama(model="mistral")
-Settings.text_splitter = text_splitter
-
-# 📁 プロジェクト読み込み（.gitignore＆拡張子フィルタ付き）
-reader = GitIgnoreDirectoryReader(
-    # input_dir="sample",  # ← 必要に応じて変更
-    input_dir="C:/projects/aung-reviewer",  # ← 必要に応じて変更
-    recursive=True
-)
+# load using repomix
+reader = SimpleDirectoryReader(input_dir="sample")
 documents = reader.load_data()
 
 # 📚 インデックス作成
@@ -40,7 +46,7 @@ index = VectorStoreIndex.from_documents(documents)
 query_engine = index.as_query_engine()
 
 # 💬 テストクエリ
-response = query_engine.query("この文章についての感想を教えて")
+response = query_engine.query("repomix-output-SOunit-aung-reviewer.xmlファイルを読み込みましたか？このファイルは、あるアプリのrepomixファイルです。プロジェクト全体を読み込み、文脈を踏まえた効果的なPRレビューを行うためのものです。repomix-output-SOunit-aung-reviewer.xmlを読んで、プロジェクトの全体像をコンテキストとして読み込むことは成功しましたか？日本語で返答をお願いします。")
 
 print("\n=== AI RESPONSE ===\n")
 print(response)
