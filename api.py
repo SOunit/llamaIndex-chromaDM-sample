@@ -23,6 +23,49 @@ app = FastAPI()
 class QueryRequest(BaseModel):
     question: str
 
+@app.on_event("startup")
+def init():
+    print("here? - 1")
+
+    # timer start
+    start = time.perf_counter()
+
+    # チャンク設定（文単位で分割しつつ、サイズを制御）
+    text_splitter = SentenceSplitter(
+        chunk_size=3000,
+        chunk_overlap=200,
+    )
+
+    # load using repomix
+    reader = SimpleDirectoryReader(input_dir="stories")
+    documents = reader.load_data()
+
+    print("here? - 2")
+
+    # 📚 インデックス作成
+    index = VectorStoreIndex.from_documents(documents)
+
+    print("here? - 3")
+
+    # 🔍 クエリエンジン作成
+    query_engine = index.as_query_engine()
+
+    print("here? - 4")
+
+    # 💬 テストクエリ
+    response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
+
+    print("here? - 5")
+
+    print("\n=== AI RESPONSE ===\n")
+    print(response)
+
+    end = time.perf_counter()
+    print(f"⏱️ 実行時間: {end - start:.4f} 秒")
+
+@app.get("/test")
+def test():
+    return {"test": "test"}
 
 @app.post("/query")
 async def query_codebase(req: QueryRequest):
@@ -35,8 +78,6 @@ async def query_codebase(req: QueryRequest):
     # response = query_engine.query(req.question)
     # return {"answer": str(response)}
     return {"answer": str("test")}
-
-print("here? - 1")
 
 def loadByMyself():
     # OpenAI設定（EmbeddingとLLM）
@@ -53,38 +94,3 @@ def loadByMyself():
     )
     documents = reader.load_data()
 
-# timer start
-start = time.perf_counter()
-
-# チャンク設定（文単位で分割しつつ、サイズを制御）
-text_splitter = SentenceSplitter(
-    chunk_size=3000,
-    chunk_overlap=200,
-)
-
-# load using repomix
-reader = SimpleDirectoryReader(input_dir="stories")
-documents = reader.load_data()
-
-print("here? - 2")
-
-# 📚 インデックス作成
-index = VectorStoreIndex.from_documents(documents)
-
-print("here? - 3")
-
-# 🔍 クエリエンジン作成
-query_engine = index.as_query_engine()
-
-print("here? - 4")
-
-# 💬 テストクエリ
-response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
-
-print("here? - 5")
-
-print("\n=== AI RESPONSE ===\n")
-print(response)
-
-end = time.perf_counter()
-print(f"⏱️ 実行時間: {end - start:.4f} 秒")
