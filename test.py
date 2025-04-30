@@ -11,6 +11,8 @@ from utils.gitignore_directory_reader import GitIgnoreDirectoryReader
 from dotenv import load_dotenv
 load_dotenv()
 
+print("here? - 1")
+
 def loadByMyself():
     # OpenAI設定（EmbeddingとLLM）
     Settings.embed_model = OpenAIEmbedding()
@@ -36,17 +38,25 @@ text_splitter = SentenceSplitter(
 )
 
 # load using repomix
-reader = SimpleDirectoryReader(input_dir="sample")
+reader = SimpleDirectoryReader(input_dir="stories")
 documents = reader.load_data()
+
+print("here? - 2")
 
 # 📚 インデックス作成
 index = VectorStoreIndex.from_documents(documents)
 
+print("here? - 3")
+
 # 🔍 クエリエンジン作成
 query_engine = index.as_query_engine()
 
+print("here? - 4")
+
 # 💬 テストクエリ
 response = query_engine.query("織田信長の文章を読みましたね？要約してください。")
+
+print("here? - 5")
 
 print("\n=== AI RESPONSE ===\n")
 print(response)
