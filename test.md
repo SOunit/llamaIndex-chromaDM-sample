@@ -31,7 +31,7 @@ ChatGPT,レポミックス？＞コンテキストを生成？
 # repomix
 
 ```
-npx repomix . --output repomix-output--web.txt --compress
+npx repomix . --output repomix-output.txt --compress
 ```
 
 # install local vector db
