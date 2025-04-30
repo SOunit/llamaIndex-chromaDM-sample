@@ -49,3 +49,22 @@ ollama run mistral
 ```
 uvicorn api:app --reload --port 8000
 ```
+
+# setup local env
+
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+# create env file
+
+```
+pip freeze requirements.txt
+```
+
+# import env files
+
+```
+pip install -r requirements.txt
+```
