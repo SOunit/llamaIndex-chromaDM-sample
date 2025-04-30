@@ -65,8 +65,8 @@ def init():
 
     print("here? - 4")
 
-    # 💬 テストクエリ
-    response = query_engine.query("織田信長の文章を読みましたね？段落ごとの要約を作ってください。また、全体として読み取れるメッセージも要約してくださいい。")
+    # this query is to fetch data only. not for think...
+    response = query_engine.query("あなたが得意なことと苦手なことを教えてください。")
 
     print("here? - 5")
 
